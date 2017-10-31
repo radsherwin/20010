@@ -10,23 +10,24 @@ public class Item : ScriptableObject {
     public ItemType itemType;
     public GameObject itemObject;
 
-    public virtual void Use()
-    {
+    public virtual void Use() {
         //Use Item
 
         Debug.Log("Using: " + name);
     }
 
-    public virtual void Remove()
-    {
+    public virtual void Remove() {
         // Remove Item
     }
 
-    public virtual int GetStats(int j)
-    {
+    public virtual int GetStats(int j) {
         //Get Equipment Stats
 
         return j;
+    }
+
+    public virtual bool IsEquipped(){
+        return true;
     }
 
     public enum ItemType

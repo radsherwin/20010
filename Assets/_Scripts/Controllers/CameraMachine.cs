@@ -40,12 +40,13 @@ public class CameraMachine : MonoBehaviour {
 
     public void CameraDontRotate()
     {
-        distance = target.position.y * .49f * adjustDistance ;
+        distance = target.position.y * .49f * adjustDistance;
         Vector3 movePosition = new Vector3(target.position.x, target.position.y, target.position.z - distance);
         float journeyLength = Vector3.Distance(transform.position, movePosition);
         float distCovered = (Time.time - startTime) * 1f;
         float fracJourney = distCovered / journeyLength;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(cameraAngle, 0, 0),  .85f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(cameraAngle, 0, 0), .85f);
+
         if (isPlayerMovement)
         {
             transform.position = Vector3.Lerp(transform.position, movePosition, fracJourney);
@@ -54,10 +55,5 @@ public class CameraMachine : MonoBehaviour {
         {
             transform.position = Vector3.Lerp(transform.position, movePosition, .85f);
         }
-
     }
-
-    
-
-
 }

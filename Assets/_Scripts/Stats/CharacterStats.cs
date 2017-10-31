@@ -25,7 +25,7 @@ public class CharacterStats : MonoBehaviour {
     public void TakeDamage(int damage)
     {
         damage -= armor.GetValue();
-        Debug.Log(block.GetValue());
+        //Debug.Log(block.GetValue());
         if (blocking)
         {
             

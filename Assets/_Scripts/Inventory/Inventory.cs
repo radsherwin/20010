@@ -39,19 +39,14 @@ public class Inventory : MonoBehaviour {
 
 
 
-    public bool AddItem (Item item)
-    {
+    public bool AddItem (Item item) {
         
-        if (item != null)
-        {
+        if (item != null){
             int slotIndex = (int)item.itemType;
-            if (!item.isDefaultItem)
-            {
+            if (!item.isDefaultItem) { 
                 //If a weapon
-                if(slotIndex == 0)
-                {
-                    if(weapons.Count >= inventorySpace)
-                    {
+                if(slotIndex == 0){
+                    if(weapons.Count >= inventorySpace){
                         Debug.Log("Not enough room in Inventory!");
                         return false;
                     }
@@ -59,10 +54,8 @@ public class Inventory : MonoBehaviour {
                     weapons.Add(item);
                 }
                 //Armor
-                else if(slotIndex == 1)
-                {
-                    if (armor.Count >= inventorySpace)
-                    {
+                else if(slotIndex == 1){
+                    if (armor.Count >= inventorySpace){
                         Debug.Log("Not enough room in Inventory!");
                         return false;
                     }
@@ -70,10 +63,8 @@ public class Inventory : MonoBehaviour {
                     armor.Add(item);
                 }
                 //Item
-                else if (slotIndex == 2)
-                {
-                    if (items.Count >= inventorySpace)
-                    {
+                else if (slotIndex == 2){
+                    if (items.Count >= inventorySpace){
                         Debug.Log("Not enough room in Inventory!");
                         return false;
                     }
@@ -106,8 +97,7 @@ public class Inventory : MonoBehaviour {
         item.Remove();
         int slotIndex = (int)item.itemType;
         allItems.Remove(item);
-        switch (slotIndex)
-        {
+        switch (slotIndex){
             case 0:
                 weapons.Remove(item);
                 break;

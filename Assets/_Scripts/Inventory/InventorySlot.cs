@@ -2,89 +2,79 @@
 using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour {
-
-
     public Image icon;
 
-
     Item item;
-    Equipment equipment;
-
     InventoryUI inventoryUI;
 
-    private void Start()
-    {
+    private void Start() {
         inventoryUI = InventoryUI.instance;
     }
 
 
-    public void AddItem(Item newItem)
-    {
+    public void AddItem(Item newItem) {
         item = newItem;
         icon.sprite = item.icon;
         icon.enabled = true;
 
     }
 
-    public void ClearSlot()
-    {
+    public void ClearSlot() {
         item = null;
         icon.sprite = null;
         icon.enabled = false;
     }
 
-    public void OnRemoveButton()
-    {
+    public void OnRemoveButton() {
+        bool isEquippedItem = false;
+        if (item != null) {
+            isEquippedItem = item.IsEquipped();
+        }
+
+        if (isEquippedItem) {
+            inventoryUI.inventoryOptionsMenu.SetActive(!inventoryUI.inventoryOptionsMenu.activeSelf);
+            inventoryUI.uiItem = item;
+        }
+        else {
+            Inventory.instance.RemoveItem(item);
+        }
+    }
+
+    public void DropItemButton(){
         Inventory.instance.RemoveItem(item);
     }
 
-    public void UseItem()
-    {
-        if(item != null)
-        {
+    public void UseItem() {
+        if(item != null) {
             item.Use();
         }
     }
 
-    public void OnHover()
-    {   
-        if(ChestUI.instance.isInChest != true)
-        {
-            if (Chest.instance != null)
-            {
-                if (Chest.instance.hasChestInteracted == false)
-                {
-                    if (item != null)
-                    {
+    public void OnHover() {   
+        if(ChestUI.instance.isInChest != true) {
+            if (Chest.instance != null) {
+                if (Chest.instance.hasChestInteracted == false) {
+                    if (item != null) {
                         Stats();
                         inventoryUI.inventoryItemInfoName.text = item.name;
                         inventoryUI.inventoryItemInfoDescription.text = item.description;
                         inventoryUI.inventoryItemInfoIcon.sprite = item.icon;
                     }
-
                     inventoryUI.inventoryItemInfoUI.SetActive(!inventoryUI.inventoryItemInfoUI.activeSelf);
-
                 }
             }
-            else
-            {
-                if (item != null)
-                {
+            else {
+                if (item != null) {
                     Stats();
                     inventoryUI.inventoryItemInfoName.text = item.name;
                     inventoryUI.inventoryItemInfoDescription.text = item.description;
                     inventoryUI.inventoryItemInfoIcon.sprite = item.icon;
                 }
-
                 inventoryUI.inventoryItemInfoUI.SetActive(!inventoryUI.inventoryItemInfoUI.activeSelf);
-
             }
         }
-        
-           
     }
-    public void Stats()
-    {
+    public void Stats() {
         /*
         foreach(Text statText in inventoryItemInfoStats.GetComponentsInChildren<Text>())
         {
@@ -103,8 +93,7 @@ public class InventorySlot : MonoBehaviour {
         bonusStat = item.GetStats(2);
 
         //There exists a damage value
-        if(damageStat > 0)
-        {
+        if(damageStat > 0) {
             //Damage value is slot 0
             gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(0);
             gameObjectSlot.GetComponentInChildren<Text>().text = damageStat.ToString();
@@ -112,16 +101,14 @@ public class InventorySlot : MonoBehaviour {
             //Icon for child(0) is the damage icon....
 
             //There exists an armor value
-            if (armorStat > 0)
-            {
+            if (armorStat > 0) {
                 //Armor value is slot 1
                 gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(1);
                 gameObjectSlot.GetComponentInChildren<Text>().text = armorStat.ToString();
                 gameObjectSlot.gameObject.SetActive(true);
 
                 //There exists a bonus stat
-                if (bonusStat  > 0)
-                {
+                if (bonusStat  > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(2);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
@@ -131,11 +118,9 @@ public class InventorySlot : MonoBehaviour {
                 
             }
             //If no armor value exists
-            else
-            {
+            else {
                 //There exists a bonus stat
-                if (bonusStat > 0)
-                {
+                if (bonusStat > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(1);
                     gameObjectSlot.gameObject.SetActive(true);
@@ -144,31 +129,24 @@ public class InventorySlot : MonoBehaviour {
                     //Only 2 stats
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-                else
-                {
+                else {
                     
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
             }
-
-
-
         }
         //There is no damage value
-        else
-        {
+        else {
             //There exists an armor value
-            if (armorStat > 0)
-            {
+            if (armorStat > 0) {
                 //Armor value is slot 0
                 gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(0);
                 gameObjectSlot.gameObject.SetActive(true);
                 gameObjectSlot.GetComponentInChildren<Text>().text = armorStat.ToString();
 
                 //There exists a bonus stat
-                if (bonusStat > 0)
-                {
+                if (bonusStat > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(1);
                     gameObjectSlot.gameObject.SetActive(true);
@@ -176,21 +154,16 @@ public class InventorySlot : MonoBehaviour {
 
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-                else
-                {
+                else {
                     
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-
-
             }
             //There doesn't exist an armor value
-            else
-            {
+            else {
                 //There exists a bonus stat
-                if (bonusStat > 0)
-                {
+                if (bonusStat > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(0);
                     gameObjectSlot.gameObject.SetActive(true);
@@ -198,17 +171,12 @@ public class InventorySlot : MonoBehaviour {
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-                else
-                {
+                else {
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(0).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
             }
         }
-        
-            
-        
     }
-
 }

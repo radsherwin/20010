@@ -21,29 +21,33 @@ public class Equipment : Item {
     public int blockModifier;
     public int bonusModifier;
     public int lifeOfWeapon;
+
     int returnedValue;
-    public override void Use()
-    {
+    public override void Use() {
         base.Use();
         Debug.Log("In Equipment");
         EquipmentManager.instance.Equip(this);
-        
-        
     }
 
-    public override void Remove()
-    {
+    public override void Remove() {
         base.Remove();
 
-        EquipmentManager.instance.Unequip((int)equipSlot);
+        //EquipmentManager.instance.Unequip((int)equipSlot);
+        EquipmentManager.instance.Unequip((int)this.equipSlot);
     }
 
-    public override int GetStats(int Modifier)
-    {
-        
+    public override bool IsEquipped(){
+        bool isEquippedBool = EquipmentManager.instance.IsEquipped(this);
+        if (isEquippedBool){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
-        switch (Modifier)
-        {
+    public override int GetStats(int Modifier) {
+        switch (Modifier) {
             case 0:
                 returnedValue = armorModifier;
                 break;
@@ -54,15 +58,11 @@ public class Equipment : Item {
                 returnedValue = bonusModifier;
                 break;
         }
-
         return returnedValue;
-
     }
-
 }
 
-public enum EquipmentSlot
-{
+public enum EquipmentSlot {
     HEAD,
     CHEST,
     FEET,

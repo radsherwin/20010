@@ -42,7 +42,7 @@ public class AttackSystem : MonoBehaviour {
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            Debug.Log(EquipmentManager.instance.curEquipment[3]);
+            //Debug.Log(EquipmentManager.instance.curEquipment[3]);
             Attack();
         }
 

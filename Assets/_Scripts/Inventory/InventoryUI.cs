@@ -18,8 +18,11 @@ public class InventoryUI : MonoBehaviour {
     public Text inventoryItemInfoDescription;
     public Image inventoryItemInfoIcon;
     public GameObject inventoryItemInfoStats;
+    public GameObject inventoryOptionsMenu, unequipOptionsButton, dropOptionsButton, cancelOptionsButton;
 
     public GameObject weaponInventory, armorInventory, itemInventory;
+
+    public Item uiItem;
 
     [HideInInspector]
     public bool canOpenInventory;
@@ -44,15 +47,11 @@ public class InventoryUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (canOpenInventory)
-        {
-            if (Input.GetButtonDown("Inventory"))
-            {
+        if (canOpenInventory) {
+            if (Input.GetButtonDown("Inventory")) {
                 inventoryUI.SetActive(!inventoryUI.activeSelf);
-                if(inventoryUI.activeSelf == false)
-                {
-                    if (inventoryItemInfoUI.activeSelf == true)
-                    {
+                if(inventoryUI.activeSelf == false) {
+                    if (inventoryItemInfoUI.activeSelf == true) {
                         inventoryItemInfoUI.SetActive(false);
                     }
                 }
@@ -65,58 +64,62 @@ public class InventoryUI : MonoBehaviour {
         
 	}
 
-    bool TogglePause()
-    {
-        if (Time.timeScale == 0f)
-        {
+    bool TogglePause() {
+        if (Time.timeScale == 0f){
             Time.timeScale = 1f;
             return (false);
         }
-        else
-        {
+        else{
             Time.timeScale = 0f;
             return (true);
         }
     }
 
-    void UpdateUI()
-    {
-        for (int i = 0; i < weaponSlots.Length; i++)
-        {
-            if(i < inventory.weapons.Count)
-            {
+    public void UnequipOption(){
+        if(uiItem!= null){
+            uiItem.Remove();
+            inventoryOptionsMenu.SetActive(!inventoryOptionsMenu.activeSelf);
+        }
+    }
+
+    public void DropOption(){
+        if(uiItem!= null){
+            inventory.RemoveItem(uiItem);
+            inventoryOptionsMenu.SetActive(!inventoryOptionsMenu.activeSelf);
+        }
+
+    }
+
+    public void CancelOption(){
+        inventoryOptionsMenu.SetActive(!inventoryOptionsMenu.activeSelf);
+    }
+
+    void UpdateUI(){
+        for (int i = 0; i < weaponSlots.Length; i++){
+            if(i < inventory.weapons.Count){
                 weaponSlots[i].AddItem(inventory.weapons[i]);
             }
-            else
-            {
+            else{
                 weaponSlots[i].ClearSlot();
             }
         }
 
-        for (int i = 0; i < armorSlots.Length; i++)
-        {
-            if (i < inventory.armor.Count)
-            {
+        for (int i = 0; i < armorSlots.Length; i++){
+            if (i < inventory.armor.Count){
                 armorSlots[i].AddItem(inventory.armor[i]);
             }
-            else
-            {
+            else{
                 armorSlots[i].ClearSlot();
             }
         }
 
-        for (int i = 0; i < itemSlots.Length; i++)
-        {
-            if (i < inventory.items.Count)
-            {
+        for (int i = 0; i < itemSlots.Length; i++){
+            if (i < inventory.items.Count){
                 itemSlots[i].AddItem(inventory.items[i]);
             }
-            else
-            {
+            else{
                 itemSlots[i].ClearSlot();
             }
         }
     }
-
-    
 }

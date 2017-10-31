@@ -44,82 +44,65 @@ public class Orbit : MonoBehaviour
 		
 
 
-	void Update()
-	{
+	void Update(){
 
         buttonCoolDown -= Time.deltaTime;
         canTarget = IsPaused();
 
         if (canTarget)
             Controls();	
-
-        if(playerController.canMove == false)
-        {
-            
-        }
-
     }
 
-    void Controls()
-    {
-        if (Input.GetButtonDown("Target"))
-        {
+    void Controls(){
+        if (Input.GetButtonDown("Target")){
             ClosestEnemy();
             lockedON = !lockedON;
 
         }
-        if (closest != null)
-        {
+        if (closest != null){
             if(Chest.instance != null)
                 Chest.instance.canUseChestChest = false;
             anim.SetBool("strafe", true);
             LockOnToEnemy();
             
         }
+        else{
+            lockedON = false;
+            finalLockedON = false;
+            closest = null;
+            SwitchBackCamera();
+        }
 
-        if(lockedON == false)
-        {
-            if (Chest.instance != null)
-                Chest.instance.canUseChestChest = true;
-            anim.SetBool("strafe", false);
-            CameraMachine.instance.target = CameraMachine.instance.defaultTarget;
-            CameraMachine.instance.adjustDistance = 1f;
-            CameraMachine.instance.cameraAngle = CameraMachine.instance.defaultCameraAngle;
-            StartCoroutine(WaitForCamera());
-            playerController.canMove = true;
+        if(lockedON == false){
+            SwitchBackCamera();
         }
     }
 
-    bool IsPaused()
-    {
-        if (Time.timeScale == 0f)
-        {
+    void SwitchBackCamera(){
+        if (Chest.instance != null)
+            Chest.instance.canUseChestChest = true;
+        anim.SetBool("strafe", false);
+        CameraMachine.instance.target = CameraMachine.instance.defaultTarget;
+        CameraMachine.instance.adjustDistance = 1f;
+        CameraMachine.instance.cameraAngle = CameraMachine.instance.defaultCameraAngle;
+        StartCoroutine(WaitForCamera());
+        playerController.canMove = true;
+    }
+
+    bool IsPaused(){
+        if (Time.timeScale == 0f){
             return false;
         }
-        else
-        {
+        else{
             return true;
         }
     }
 
     //LockOn to closest Enemy
     void LockOnToEnemy(){
-
-		if(lockedON)
-		{
-			//If there aren't any enemies (or the player killed the last one targeted) make sure that the lock is false
-			if (!closest)
-			{      
-				//activeIcon.active = false;
-				lockedON = false;
-                finalLockedON = false;
-				closest = null;
-                anim.SetBool("strafe", false);
-			}
-            finalLockedON = true;
-            if (closest != null)
-            {
-                
+		if(lockedON){
+            if (closest != null){
+                finalLockedON = true;
                 Vector3 diff = (closest.transform.position - transform.position);
                 float curDistance = diff.sqrMagnitude;
                 //check if current distance is far from target enemy 
@@ -132,7 +115,6 @@ public class Orbit : MonoBehaviour
                 Vector3 lookDirection = closest.transform.position;
                 lookDirection.y = this.transform.position.y;
                 transform.LookAt(lookDirection);
-
                 StartCoroutine(MoveInCamera());
                 playerController.canMove = true;
             }
@@ -141,48 +123,38 @@ public class Orbit : MonoBehaviour
              
 	}
 
-    public void LockOnToInteractable(Interactables newTarget)
-    {
+    public void LockOnToInteractable(Interactables newTarget){
         interactableTarget = newTarget.interactionTransform;
-        if (interactableTarget != null)
-        {
+        if (interactableTarget != null){
             transform.LookAt(new Vector3(interactableTarget.transform.position.x, transform.position.y, interactableTarget.transform.position.z));
         }
     }
 
-    public void StopLockingOnToInteractable()
-    {
+    public void StopLockingOnToInteractable(){
         interactableTarget = null;
     }
 
-    void RollingSystem()
-    {
+    void RollingSystem(){
         bool doubleClick;
         float xVel = transform.InverseTransformDirection(rgbd.velocity).x;
         
-        if (xVel < -1)
-        {
-            if (Input.GetButtonDown("Fire2") && buttonCoolDown < 0)
-            {            
+        if (xVel < -1){
+            if (Input.GetButtonDown("Fire2") && buttonCoolDown < 0){            
                 playerController.canMove = false;
                 anim.SetTrigger(rollRightHash);
                 buttonCoolDown = .6f;
             }
         }
         //He's going left
-        else if (xVel > 1)
-        {
-            if (Input.GetButtonDown("Fire2") && buttonCoolDown < 0)
-            {
+        else if (xVel > 1){
+            if (Input.GetButtonDown("Fire2") && buttonCoolDown < 0){
                 playerController.canMove = false;
                 anim.SetTrigger(rollLeftHash);
                 buttonCoolDown = .6f;
             }
         }
-        else
-        {
-            if (Input.GetButtonDown("Fire2") && buttonCoolDown < 0)
-            {
+        else{
+            if (Input.GetButtonDown("Fire2") && buttonCoolDown < 0){
                 playerController.canMove = false;
                 anim.SetTrigger(rollBackHash);
                 buttonCoolDown = .6f;
@@ -193,28 +165,24 @@ public class Orbit : MonoBehaviour
 		
 
 	//Find ClosestEnemy
-	private GameObject ClosestEnemy(){
+	private GameObject ClosestEnemy() {
 		// Find all game objects with tag Enemy
 		enemyLocations = GameObject.FindGameObjectsWithTag("Enemy");
 
-        if (enemyLocations != null)
-        {
+        if (enemyLocations != null){
             lockOnDistance = 20f;
             Vector3 position = transform.position;
             // Iterate through them and find the closest one
-            foreach (GameObject go in enemyLocations)
-            {
+            foreach (GameObject go in enemyLocations){
                 Vector3 diff = (go.transform.position - position);
                 
                 float curDistance = diff.sqrMagnitude;
                 
-                if (curDistance < lockOnDistance)
-                {
+                if (curDistance < lockOnDistance){
                     closest = go;
                     lockOnDistance = curDistance;
                 }
-                else
-                {
+                else{
                     closest = null;
                 }
             }
@@ -222,15 +190,13 @@ public class Orbit : MonoBehaviour
 		return closest;
 	}
 
-    IEnumerator WaitForCamera()
-    {
+    IEnumerator WaitForCamera(){
         yield return new WaitForSeconds(.9f);
  
         CameraMachine.instance.isPlayerMovement = true;
     }
 
-    IEnumerator MoveInCamera()
-    {
+    IEnumerator MoveInCamera(){
         CameraMachine.instance.isPlayerMovement = false;
         CameraMachine.instance.target = cameraCombatTarget.transform;
         CameraMachine.instance.adjustDistance = distanceAdjust;

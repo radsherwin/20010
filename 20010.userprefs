@@ -1,9 +1,15 @@
 ﻿<Properties StartupConfiguration="{C080740A-BC60-B415-5D42-DE11629D42F0}|">
   <MonoDevelop.Ide.ItemProperties.20010 PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/Stats/CharacterStats.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/Inventory/Inventory.cs">
     <Files>
-      <File FileName="Assets/_Scripts/Item/Item.cs" Line="1" Column="1" />
-      <File FileName="Assets/_Scripts/Stats/CharacterStats.cs" Line="1" Column="1" />
+      <File FileName="Assets/_Scripts/AttackSystem.cs" Line="45" Column="15" />
+      <File FileName="Assets/_Scripts/Controllers/Orbit.cs" Line="85" Column="1" />
+      <File FileName="Assets/_Scripts/Inventory/Inventory.cs" Line="46" Column="38" />
+      <File FileName="Assets/_Scripts/Inventory/InventoryUI.cs" Line="94" Column="74" />
+      <File FileName="Assets/_Scripts/Inventory/InventorySlot.cs" Line="35" Column="13" />
+      <File FileName="Assets/_Scripts/Inventory/EquipmentManager.cs" Line="86" Column="26" />
+      <File FileName="Assets/_Scripts/Item/Equipment.cs" Line="36" Column="64" />
+      <File FileName="Assets/_Scripts/Item/Item.cs" Line="23" Column="41" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
