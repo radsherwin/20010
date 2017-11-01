@@ -16,11 +16,12 @@ MonoBehaviour:
   isDefaultItem: 0
   description: Description
   itemType: 0
-  equipSlot: 3
   itemObject: {fileID: 1055724379294548, guid: 1aa3e92078f35b8498581782cccfa22d, type: 2}
+  equipSlot: 3
   bone: WeaponHolder
   armorModifier: 0
-  damageModifier: 2
-  blockModifier: 10
+  damageModifier: 4
+  blockModifier: 2
   bonusModifier: 4
-  lifeOfWeapon: 0
+  lifeOfWeapon: 30
+  defaultLifeOfWeapon: 30

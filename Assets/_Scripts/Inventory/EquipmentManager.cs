@@ -22,7 +22,8 @@ public class EquipmentManager : MonoBehaviour {
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChanged;
 
-    private void Start(){
+    private void Start() {
+        
         //Get length of enum Equipment Slot
         int numOfSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
         curEquipment = new Equipment[numOfSlots];
@@ -63,14 +64,11 @@ public class EquipmentManager : MonoBehaviour {
         if(curEquipment[slotIndex] != null){
             Debug.Log(curItemObjects[slotIndex]);
             if (curItemObjects[slotIndex] != null){
-                Debug.Log("destroying");
                 Destroy(curItemObjects[slotIndex].gameObject);
-                
                 //curItemObjects[slotIndex] = null;
             }
             Equipment oldItem = curEquipment[slotIndex];
             curEquipment[slotIndex] = null;
-
 
             if (onEquipmentChanged != null){
                 onEquipmentChanged.Invoke(null, oldItem);
@@ -78,8 +76,17 @@ public class EquipmentManager : MonoBehaviour {
         }
     }
 
-    public bool IsEquipped(Equipment item){
-        if(curEquipment[(int)item.equipSlot]){
+    public void LifeOfWeaponCheck(Equipment item){
+        
+        if (item.lifeOfWeapon <= 0){
+            item.lifeOfWeapon = 0;
+            //Weapon is destroyed, Last hit does more damage
+            inventory.RemoveItem(item);
+        }
+    }
+
+    public bool IsEquipped(Equipment item) {
+        if(curEquipment[(int)item.equipSlot]) {
             return true;
         }
         else{

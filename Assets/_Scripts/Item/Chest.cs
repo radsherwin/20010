@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Chest : Interactables {
 
@@ -10,10 +11,11 @@ public class Chest : Interactables {
         instance = this;
         inventory = Inventory.instance;
     }
+    public Animator chestAnim;
     public Item item;
     Item itemToAdd;
-    public GameObject chestMesh;
     public Transform cameraFollow;
+    [HideInInspector]
     public bool hasChestInteracted = false;
 
     Inventory inventory;
@@ -26,86 +28,60 @@ public class Chest : Interactables {
 
     Interactables chestInt;
 
-    public override void Interact()
-    {
-
-        
-        if (canUseChestChest)
-        {
+    public override void Interact() {
+        if (canUseChestChest) {
             base.Interact();
             ChestInteractFunc();
         }
-        
     }
 
-    public override void ChestInteract()
-    {
+    public override void ChestInteract() {
         base.ChestInteract();
         CollectItem();
-
     }
 
-    private void Start()
-    {
-        
+    private void Start() {
         chestui = ChestUI.instance;
         equipButton.onClick.AddListener(ChestItem);
     }
 
-    void ChestInteractFunc()
-    {
+    void ChestInteractFunc() {
+        chestAnim.SetTrigger("chestOpen");
+        if (!pauseGame)
+            StartCoroutine(WaitTime());
+        else
+            pauseGame = TogglePause();
         ChestInteractionSystem();
-        
-        
-        if (itemToAdd != null)
-        {
+        if (itemToAdd != null){
             Stats();
             chestui.titleofWeapon.text = item.name;
             chestui.descriptionText.text = item.description;
             chestui.iconInfoUI.sprite = item.icon;
             chestui.iconInfoUI.enabled = true;
         }
-
-        //bool wasPickedUp = Inventory.instance.AddItem(item);
-
-           
     }
 
-    void ChestInteractionSystem()
-    {
+    void ChestInteractionSystem() {
         hasChestInteracted = !hasChestInteracted;
-        if (hasChestInteracted == true)
-        {
+        if (hasChestInteracted == true) {
             itemToAdd = item;
             chestui.isInChest = true;
             InventoryUI.instance.canOpenInventory = false;
             CameraMachine.instance.target = cameraFollow;
 
         }
-        else
-        {
+        else {
             chestui.isInChest = false;
             itemToAdd = null;
             InventoryUI.instance.canOpenInventory = true;
             CameraMachine.instance.target = CameraMachine.instance.defaultTarget;
-
-
         }
-        pauseGame = TogglePause();
         chestui.itemInfoUI.SetActive(!chestui.itemInfoUI.activeSelf);
         InventoryUI.instance.inventoryUI.SetActive(!InventoryUI.instance.inventoryUI.activeSelf);
     }
     
 
-    public void Stats()
-    {
-        /*
-        foreach(Text statText in inventoryItemInfoStats.GetComponentsInChildren<Text>())
-        {
-            Debug.Log(statText.text);
-        }
-        */
-
+    public void Stats() {
         Transform gameObjectSlot;
         int damageStat;
         int armorStat;
@@ -115,150 +91,128 @@ public class Chest : Interactables {
         bonusStat = item.GetStats(2);
 
         //There exists a damage value
-        if (damageStat > 0)
-        {
+        if (damageStat > 0) {
             //Damage value is slot 0
             gameObjectSlot = chestui.itemInfoStats.transform.GetChild(0);
             gameObjectSlot.GetComponentInChildren<Text>().text = damageStat.ToString();
+            gameObjectSlot.GetComponentInChildren<Image>().sprite = chestui.damageIcon;
             gameObjectSlot.gameObject.SetActive(true);
-            //Icon for child(0) is the damage icon....
-
             //There exists an armor value
-            if (armorStat > 0)
-            {
+            if (armorStat > 0) {
                 //Armor value is slot 1
                 gameObjectSlot = chestui.itemInfoStats.transform.GetChild(1);
                 gameObjectSlot.GetComponentInChildren<Text>().text = armorStat.ToString();
+                gameObjectSlot.GetComponentInChildren<Image>().sprite = chestui.armorIcon;
                 gameObjectSlot.gameObject.SetActive(true);
 
                 //There exists a bonus stat
-                if (bonusStat > 0)
-                {
+                if (bonusStat > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = chestui.itemInfoStats.transform.GetChild(2);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
                     gameObjectSlot.gameObject.SetActive(true);
                 }
-
-
             }
             //If no armor value exists
-            else
-            {
+            else {
                 //There exists a bonus stat
-                if (bonusStat > 0)
-                {
+                if (bonusStat > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = chestui.itemInfoStats.transform.GetChild(1);
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
                     gameObjectSlot.gameObject.SetActive(true);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
 
                     //Only 2 stats
                     chestui.itemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-                else
-                {
+                else {
 
                     chestui.itemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     chestui.itemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
             }
-
-
-
         }
         //There is no damage value
-        else
-        {
+        else {
             //There exists an armor value
-            if (armorStat > 0)
-            {
+            if (armorStat > 0) {
                 //Armor value is slot 0
                 gameObjectSlot = chestui.itemInfoStats.transform.GetChild(0);
+                gameObjectSlot.GetComponentInChildren<Image>().sprite = chestui.armorIcon;
                 gameObjectSlot.gameObject.SetActive(true);
                 gameObjectSlot.GetComponentInChildren<Text>().text = armorStat.ToString();
 
                 //There exists a bonus stat
-                if (bonusStat > 0)
-                {
+                if (bonusStat > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = chestui.itemInfoStats.transform.GetChild(1);
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
                     gameObjectSlot.gameObject.SetActive(true);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
 
                     chestui.itemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-                else
-                {
-
+                else {
                     chestui.itemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     chestui.itemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-
-
             }
-            //There doesn't exist an armor value
-            else
-            {
+            //There doesn't exist an armor value or damage
+            else {
                 //There exists a bonus stat
-                if (bonusStat > 0)
-                {
+                if (bonusStat > 0) {
                     //Bonus is slot 2
                     gameObjectSlot = chestui.itemInfoStats.transform.GetChild(0);
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
                     gameObjectSlot.gameObject.SetActive(true);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
                     chestui.itemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     chestui.itemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
-                else
-                {
+                else {
                     chestui.itemInfoStats.transform.GetChild(0).gameObject.SetActive(false);
                     chestui.itemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     chestui.itemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
             }
         }
-
-
-
     }
 
-    void ChestItem()
-    {
-        
-        
+    void ChestItem() {
         ChestFocused();
-        
     }
 
-    public void CollectItem()
-    {
+    public void CollectItem() {
         //Debug.Log(item);
         //ChestInteractFunc();
         bool wasPickedUp = Inventory.instance.AddItem(itemToAdd);
         
-        if (wasPickedUp)
-        {
+        if (wasPickedUp) {
             ChestInteractionSystem();
             itemToAdd = null;
             ChestDefocused();
             Destroy(this);
+            pauseGame = TogglePause();
         }
-        
-        
-        
-
     }
 
-    bool TogglePause()
+    IEnumerator WaitTime()
     {
-        if (Time.timeScale == 0f)
-        {
+        yield return new WaitForSeconds(.3f);
+        Debug.Log("Running");
+        pauseGame = TogglePause();
+        yield return null;
+    }
+
+    bool TogglePause() {
+        Debug.Log("Pause Runnign");
+        if (Time.timeScale == 0f) {
             Time.timeScale = 1f;
             return (false);
         }
-        else
-        {
+        else {
             Time.timeScale = 0f;
             return (true);
         }

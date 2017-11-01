@@ -97,6 +97,7 @@ public class InventorySlot : MonoBehaviour {
             //Damage value is slot 0
             gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(0);
             gameObjectSlot.GetComponentInChildren<Text>().text = damageStat.ToString();
+            gameObjectSlot.GetComponentInChildren<Image>().sprite = inventoryUI.damageIcon;
             gameObjectSlot.gameObject.SetActive(true);
             //Icon for child(0) is the damage icon....
 
@@ -105,6 +106,7 @@ public class InventorySlot : MonoBehaviour {
                 //Armor value is slot 1
                 gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(1);
                 gameObjectSlot.GetComponentInChildren<Text>().text = armorStat.ToString();
+                gameObjectSlot.GetComponentInChildren<Image>().sprite = inventoryUI.armorIcon;
                 gameObjectSlot.gameObject.SetActive(true);
 
                 //There exists a bonus stat
@@ -112,6 +114,7 @@ public class InventorySlot : MonoBehaviour {
                     //Bonus is slot 2
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(2);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
                     gameObjectSlot.gameObject.SetActive(true);
                 }
 
@@ -125,6 +128,7 @@ public class InventorySlot : MonoBehaviour {
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(1);
                     gameObjectSlot.gameObject.SetActive(true);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
 
                     //Only 2 stats
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
@@ -133,6 +137,7 @@ public class InventorySlot : MonoBehaviour {
                     
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
+
                 }
             }
         }
@@ -144,6 +149,7 @@ public class InventorySlot : MonoBehaviour {
                 gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(0);
                 gameObjectSlot.gameObject.SetActive(true);
                 gameObjectSlot.GetComponentInChildren<Text>().text = armorStat.ToString();
+                gameObjectSlot.GetComponentInChildren<Image>().sprite = inventoryUI.armorIcon;
 
                 //There exists a bonus stat
                 if (bonusStat > 0) {
@@ -151,16 +157,17 @@ public class InventorySlot : MonoBehaviour {
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(1);
                     gameObjectSlot.gameObject.SetActive(true);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
-
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }
                 else {
                     
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
+
                 }
             }
-            //There doesn't exist an armor value
+            //There doesn't exist an armor value and no damage
             else {
                 //There exists a bonus stat
                 if (bonusStat > 0) {
@@ -168,6 +175,7 @@ public class InventorySlot : MonoBehaviour {
                     gameObjectSlot = inventoryUI.inventoryItemInfoStats.transform.GetChild(0);
                     gameObjectSlot.gameObject.SetActive(true);
                     gameObjectSlot.GetComponentInChildren<Text>().text = bonusStat.ToString();
+                    gameObjectSlot.GetComponentInChildren<Image>().sprite = null;
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(1).gameObject.SetActive(false);
                     inventoryUI.inventoryItemInfoStats.transform.GetChild(2).gameObject.SetActive(false);
                 }

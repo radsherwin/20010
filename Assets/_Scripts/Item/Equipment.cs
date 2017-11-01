@@ -21,8 +21,10 @@ public class Equipment : Item {
     public int blockModifier;
     public int bonusModifier;
     public int lifeOfWeapon;
+    public int defaultLifeOfWeapon;
 
     int returnedValue;
+
     public override void Use() {
         base.Use();
         Debug.Log("In Equipment");
@@ -36,9 +38,9 @@ public class Equipment : Item {
         EquipmentManager.instance.Unequip((int)this.equipSlot);
     }
 
-    public override bool IsEquipped(){
+    public override bool IsEquipped() {
         bool isEquippedBool = EquipmentManager.instance.IsEquipped(this);
-        if (isEquippedBool){
+        if (isEquippedBool) {
             return true;
         }
         else{
@@ -46,8 +48,8 @@ public class Equipment : Item {
         }
     }
 
-    public override int GetStats(int Modifier) {
-        switch (Modifier) {
+    public override int GetStats(int modifierStats) {
+        switch (modifierStats) {
             case 0:
                 returnedValue = armorModifier;
                 break;

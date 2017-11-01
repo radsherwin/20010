@@ -12,24 +12,26 @@ public class AttackSystem : MonoBehaviour {
 
     CharacterStats myStats;
     CharacterStats enemyStats;
+    Equipment[] curEquipment;
 
     int attackTrigHash = Animator.StringToHash("attack");
     int attackNumbHash = Animator.StringToHash("attackNumber");
     int isAttackingHash = Animator.StringToHash("isAttacking");
     int blockingHash = Animator.StringToHash("block");
 
- 
-
     // Use this for initialization
     void Start () {
         anim = GetComponent<Animator>();
         myStats = GetComponent<CharacterStats>();
+
+        int numOfSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
+        curEquipment = new Equipment[numOfSlots];
 	}
 	
 	// Update is called once per frame
 	void Update () {
         buttonCoolDown -= Time.deltaTime;
-
+       
         canAttack = IsPaused();
         
         if (canAttack)
@@ -38,10 +40,8 @@ public class AttackSystem : MonoBehaviour {
          
 	}
 
-    void Controls()
-    {
-        if (Input.GetButtonDown("Fire1"))
-        {
+    void Controls() {
+        if (Input.GetButtonDown("Fire1")) {
             //Debug.Log(EquipmentManager.instance.curEquipment[3]);
             Attack();
         }
@@ -49,108 +49,97 @@ public class AttackSystem : MonoBehaviour {
         Blocking();
     }
 
-    bool IsPaused()
-    {
-        if (Time.timeScale == 0f)
-        {
+    bool IsPaused() {
+        if (Time.timeScale == 0f) {
             return false;
         }
-        else
-        {
+        else {
             return true;
         }
     }
 
-    void Blocking()
-    {
-        if (Input.GetButton("Block"))
-        {
+    void Blocking() {
+        if (Input.GetButton("Block")) {
             CharacterStats.instance.blocking = true;
             anim.SetBool(blockingHash, true);
         }
 
-        else if (Input.GetButtonUp("Block"))
-        {
+        else if (Input.GetButtonUp("Block")) {
             CharacterStats.instance.blocking = false;
             anim.SetBool(blockingHash, false);
         }
 
-        else if (Input.GetAxisRaw("Trigger") > 0)
-        {
+        else if (Input.GetAxisRaw("Trigger") > 0) {
             CharacterStats.instance.blocking = true;
             anim.SetBool(blockingHash, true);
         }
 
-        else if (Input.GetAxisRaw("Trigger") == 0)
-        {
+        else if (Input.GetAxisRaw("Trigger") == 0) {
             CharacterStats.instance.blocking = false;
             anim.SetBool(blockingHash, false);
         }
     }
 
-    public void Attack()
-    {
-
-
+    public void Attack() {
         if (anim.GetFloat(isAttackingHash) <= 0 ) {
-
-            
-            switch (attackNumber)
-            {
+            switch (attackNumber) {
                 case 0:
                     anim.SetTrigger(attackTrigHash);
                     anim.SetInteger(attackNumbHash, 0);
-                    if(enemyStats != null)
-                        enemyStats.TakeDamage(myStats.damage.GetValue());
+                    Attacking();
                     break;
                 case 1:
                     anim.SetTrigger(attackTrigHash);
                     anim.SetInteger(attackNumbHash, 1);
-                    if (enemyStats != null)
-                        enemyStats.TakeDamage(myStats.damage.GetValue());
+                    Attacking();
                     break;
                 case 2:
                     anim.SetTrigger(attackTrigHash);
                     anim.SetInteger(attackNumbHash, 2);
-                    if (enemyStats != null)
-                        enemyStats.TakeDamage(myStats.damage.GetValue());
+                    Attacking();
                     break;
                 case 3:
                     anim.SetTrigger(attackTrigHash);
                     anim.SetInteger(attackNumbHash, 3);
-                    if (enemyStats != null)
-                        enemyStats.TakeDamage(myStats.damage.GetValue());
+                    Attacking();
                     break;
             }
             //enemyStats = null;
         }
-
-
-        
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        CharacterStats eStats =  other.gameObject.GetComponent<CharacterStats>();
-        if(other.gameObject.tag == "Enemy")
-        {
-            enemyStats = eStats;
-            //if(isAttacking)
+    void Attacking(){
+        if (enemyStats != null) {
+            enemyStats.TakeDamage(myStats.damage.GetValue());
+            if(EquipmentManager.instance.curEquipment[3] != null){
+                if (EquipmentManager.instance.curEquipment[3].lifeOfWeapon > 0) { 
+                    EquipmentManager.instance.curEquipment[3].lifeOfWeapon -= enemyStats.armor.GetValue();
+                }
+                else if (EquipmentManager.instance.curEquipment[3].lifeOfWeapon <= 0) {
+                    EquipmentManager.instance.curEquipment[3].lifeOfWeapon = 0;
+                    Inventory.instance.RemoveItem(EquipmentManager.instance.curEquipment[3]);
+                }
+            }
+            //enemyStats.armor.GetValue();
+
         }
-        else
-        {
+    }
+
+
+    private void OnTriggerEnter(Collider other) {
+        CharacterStats eStats =  other.gameObject.GetComponent<CharacterStats>();
+        if(other.gameObject.tag == "Enemy") {
+            enemyStats = eStats;
+        }
+        else {
             enemyStats = null;
         }
     }
 
-
-
-    void Hit()
-    {
+    void Hit() {
         attackNumber++;
         if (attackNumber > 3)
             attackNumber = 0;
-
     }
 
 }

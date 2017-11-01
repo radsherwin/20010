@@ -37,8 +37,6 @@ public class Inventory : MonoBehaviour {
 
     public Item equipmentItem;
 
-
-
     public bool AddItem (Item item) {
         
         if (item != null){
@@ -50,7 +48,6 @@ public class Inventory : MonoBehaviour {
                         Debug.Log("Not enough room in Inventory!");
                         return false;
                     }
-
                     weapons.Add(item);
                 }
                 //Armor
@@ -59,7 +56,6 @@ public class Inventory : MonoBehaviour {
                         Debug.Log("Not enough room in Inventory!");
                         return false;
                     }
-
                     armor.Add(item);
                 }
                 //Item
@@ -68,7 +64,6 @@ public class Inventory : MonoBehaviour {
                         Debug.Log("Not enough room in Inventory!");
                         return false;
                     }
-
                     items.Add(item);
                 }
 
@@ -84,20 +79,26 @@ public class Inventory : MonoBehaviour {
             
             return false;
         }
-       
-
         return true;
-        
     }
 
-    
-
-    public void RemoveItem(Item item)
-    {
+    public void RemoveItem(Item item) {
+        if (item.IsEquipped() && EquipmentManager.instance.curEquipment[3].lifeOfWeapon > 0){
+            //Drop item to ground
+            GameObject newItemObject = Instantiate<GameObject>(item.itemObject);
+            newItemObject.transform.parent = null;
+            newItemObject.transform.position = PlayerManager.instance.player.transform.position;
+        }
+        else {
+            //Drop item to ground
+            GameObject newItemObject = Instantiate<GameObject>(item.itemObject);
+            newItemObject.transform.parent = null;
+            newItemObject.transform.position = PlayerManager.instance.player.transform.position;
+        }
         item.Remove();
         int slotIndex = (int)item.itemType;
         allItems.Remove(item);
-        switch (slotIndex){
+        switch (slotIndex) {
             case 0:
                 weapons.Remove(item);
                 break;
@@ -108,11 +109,6 @@ public class Inventory : MonoBehaviour {
                 items.Remove(item);
                 break;
         }
-        //Drop item to ground
-        GameObject newItemObject = Instantiate<GameObject>(item.itemObject);
-        newItemObject.transform.parent = null;
-        newItemObject.transform.position = PlayerManager.instance.player.transform.position;
-
 
 
         if (onItemChangedCallback != null)

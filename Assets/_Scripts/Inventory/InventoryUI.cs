@@ -19,9 +19,11 @@ public class InventoryUI : MonoBehaviour {
     public Image inventoryItemInfoIcon;
     public GameObject inventoryItemInfoStats;
     public GameObject inventoryOptionsMenu, unequipOptionsButton, dropOptionsButton, cancelOptionsButton;
+    public Sprite damageIcon, armorIcon;
 
     public GameObject weaponInventory, armorInventory, itemInventory;
 
+    [HideInInspector]
     public Item uiItem;
 
     [HideInInspector]

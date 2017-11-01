@@ -29,7 +29,7 @@ public class Orbit : MonoBehaviour
 
     void Start()
 	{
-		anim = GetComponent<Animator> ();
+        anim = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
         player = this.gameObject;
 		rgbd = GetComponent<Rigidbody> ();

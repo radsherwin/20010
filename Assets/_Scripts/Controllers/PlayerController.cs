@@ -47,8 +47,6 @@ public class PlayerController : MonoBehaviour {
     {
         //Are we currently hovering over UI. If yes then exit out before controlling player.
         buttonCoolDown -= Time.deltaTime;
-        
-        
         InteractableFunc();
     }
 

@@ -14,36 +14,29 @@ public class CharacterStats : MonoBehaviour {
 
     public bool blocking = false;
 
-    private void Awake()
-    {
+    private void Awake() {
         instance = this;
         curHealth = maxHealth;
     }
 
-    
-
-    public void TakeDamage(int damage)
-    {
+    public void TakeDamage(int damage) {
         damage -= armor.GetValue();
         //Debug.Log(block.GetValue());
-        if (blocking)
-        {
-            
+        if (blocking) {
             damage -= block.GetValue();
         }
+
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 
         curHealth -= damage;
         Debug.Log(transform.name + " takes " + damage + " damage.");
         
-        if(curHealth <= 0)
-        {
+        if(curHealth <= 0) {
             Die();
         }
     }
 
-    public virtual void Die()
-    {
+    public virtual void Die() {
         //Die in some way
         //Method meant to be overwritten by player and enemy die systems
         Debug.Log(transform.name + " is dead");

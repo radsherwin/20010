@@ -18,6 +18,7 @@ public class ChestUI : MonoBehaviour {
     public Text titleofWeapon;
     public Text descriptionText;
     public GameObject itemInfoStats;
+    public Sprite damageIcon, armorIcon;
 
     
 

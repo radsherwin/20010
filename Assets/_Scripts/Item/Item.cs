@@ -22,7 +22,6 @@ public class Item : ScriptableObject {
 
     public virtual int GetStats(int j) {
         //Get Equipment Stats
-
         return j;
     }
 
@@ -30,12 +29,15 @@ public class Item : ScriptableObject {
         return true;
     }
 
+    public virtual void AttackItem(){
+        
+    }
+
     public enum ItemType
     {
         WEAPON,
         ARMOR,
         ITEM
-
     }
 
 }
